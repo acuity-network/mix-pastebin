@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/link-blockchain/mix-pastebin#readme",
   "dependencies": {
-    "express": "^4.15.5"
+    "express": "^4.16.1",
+    "google-protobuf": "^3.4.0",
+    "jquery": "^3.2.1"
   }
 }
