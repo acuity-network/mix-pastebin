@@ -6,6 +6,7 @@ $(function() {
   var pastebinmixin = require("./pastebin_mixin_pb.js");
   var container = require("./container_pb.js");
   var pako = require("pako");
+  var base64js = require('base64-js');
 
   $("#publish").click(function() {
     console.log($("#text").val());
@@ -38,10 +39,13 @@ $(function() {
     var containerPayload = containerMessage.serializeBinary();
     console.log(containerPayload);
 
+    var base64Container = base64js.fromByteArray(containerPayload);
+    console.log(base64Container);
+
 
     // Decode
-    
-    var containerMessage2 = container.ItemContainer.deserializeBinary(containerPayload);
+
+    var containerMessage2 = container.ItemContainer.deserializeBinary(base64js.toByteArray(base64Container));
     var itemPayloadCompressed2 = containerMessage2.getPayload();
     console.log(itemPayloadCompressed2);
 
