@@ -1,16 +1,18 @@
 var $ = require("jquery");
-var pastebinmixin = require("./pastebin_mixin_pb.js");
-var container = require("./container_pb.js");
 
 $(function() {
   "use strict";
+
+  var pastebinmixin = require("./pastebin_mixin_pb.js");
+  var container = require("./container_pb.js");
+  var pako = require("pako");
 
   $("#publish").click(function() {
     console.log($("#text").val());
 
 
     // Encode
-    
+
     var message = new pastebinmixin.PastebinMixin();
     message.setText($("#text").val());
     var mixinPayload = message.serializeBinary();
@@ -26,10 +28,13 @@ $(function() {
     var itemPayload = itemMessage.serializeBinary();
     console.log(itemPayload);
     
+    var itemPayloadCompressed = pako.deflateRaw(itemPayload);
+    console.log(itemPayloadCompressed);
+
     var containerMessage = new container.ItemContainer();
-    containerMessage.setCompression = container.Compression.NONE;
-    containerMessage.setPayload(itemPayload);
-    
+    containerMessage.setCompression = container.Compression.DEFLATE;
+    containerMessage.setPayload(itemPayloadCompressed);
+
     var containerPayload = containerMessage.serializeBinary();
     console.log(containerPayload);
 
@@ -37,10 +42,10 @@ $(function() {
     // Decode
     
     var containerMessage2 = container.ItemContainer.deserializeBinary(containerPayload);
-    var itemPayload2 =  containerMessage2.getPayload();
-    console.log(itemPayload2);
+    var itemPayloadCompressed2 = containerMessage2.getPayload();
+    console.log(itemPayloadCompressed2);
 
-    var itemMessage2 = container.Item.deserializeBinary(itemPayload2);
+    var itemMessage2 = container.Item.deserializeBinary(pako.inflateRaw(itemPayloadCompressed2));
     var mixins = itemMessage2.getMixinsList();
     
     var mixinPayload2 = mixins[0].getPayload();
@@ -51,4 +56,5 @@ $(function() {
     console.log(pastbinMixinMessage2.getText());
     
   });
+
 });
