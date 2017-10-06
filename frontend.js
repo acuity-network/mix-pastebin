@@ -39,9 +39,6 @@ $(function() {
     var containerPayload = containerMessage.serializeBinary();
     console.log(containerPayload);
 
-    var base64Container = base64js.fromByteArray(containerPayload);
-    console.log(base64Container);
-
     var data = '--4na9stc9e6a\nContent-Disposition: file; filename=""\nContent-Type: application/octet-stream\n\n' + Buffer.from(containerPayload).toString('binary'); + '\n--4na9stc9e6a--';
     
     console.log(data);
