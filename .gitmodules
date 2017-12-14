@@ -1,0 +1,3 @@
+[submodule "mix-item-store"]
+	path = mix-item-store
+	url = https://github.com/mix-blockchain/mix-item-store
